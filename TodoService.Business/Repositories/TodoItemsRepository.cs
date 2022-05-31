@@ -10,16 +10,23 @@ namespace TodoService.Business.Repositories
 {
     public class TodoItemsRepository
     {
-        public async Task<IEnumerable<TodoItemDTO>> GetTodoItems(TodoContext context)
+        private TodoContext _context;
+
+        public TodoItemsRepository(TodoContext context)
         {
-            return await context.TodoItems
+            _context = context;
+        }
+
+        public async Task<IEnumerable<TodoItemDTO>> GetTodoItems()
+        {
+            return await _context.TodoItems
                 .Select(x => ItemToDTO(x))
                 .ToListAsync();
         }
 
-        public async Task<TodoItemDTO> GetTodoItem(long id, TodoContext context)
+        public async Task<TodoItemDTO> GetTodoItem(long id)
         {
-            var todoItem = await context.TodoItems.FindAsync(id);
+            var todoItem = await _context.TodoItems.FindAsync(id);
 
             if (todoItem == null)
             {
@@ -29,14 +36,14 @@ namespace TodoService.Business.Repositories
             return ItemToDTO(todoItem);
         }
 
-        public async Task<ResultStatus> UpdateTodoItem(long id, TodoItemDTO todoItemDTO, TodoContext context)
+        public async Task<ResultStatus> UpdateTodoItem(long id, TodoItemDTO todoItemDTO)
         {
             if (id != todoItemDTO.Id)
             {
                 return ResultStatus.BadRequest;
             }
 
-            var todoItem = await context.TodoItems.FindAsync(id);
+            var todoItem = await _context.TodoItems.FindAsync(id);
             if (todoItem == null)
             {
                 return ResultStatus.NotFound;
@@ -47,9 +54,9 @@ namespace TodoService.Business.Repositories
 
             try
             {
-                await context.SaveChangesAsync();
+                await _context.SaveChangesAsync();
             }
-            catch (DbUpdateConcurrencyException) when (!TodoItemExists(id, context))
+            catch (DbUpdateConcurrencyException) when (!TodoItemExists(id))
             {
                 return ResultStatus.NotFound;
             }
@@ -57,7 +64,7 @@ namespace TodoService.Business.Repositories
             return ResultStatus.NoContent;
         }
 
-        public async Task<TodoItemDTO> CreateTodoItem(TodoItemDTO todoItemDTO, TodoContext context)
+        public async Task<TodoItemDTO> CreateTodoItem(TodoItemDTO todoItemDTO)
         {
             var todoItem = new TodoItem
             {
@@ -65,29 +72,29 @@ namespace TodoService.Business.Repositories
                 Name = todoItemDTO.Name
             };
 
-            context.TodoItems.Add(todoItem);
-            await context.SaveChangesAsync();
+            _context.TodoItems.Add(todoItem);
+            await _context.SaveChangesAsync();
 
             return ItemToDTO(todoItem);
         }
 
-        public async Task<ResultStatus> DeleteTodoItem(long id, TodoContext context)
+        public async Task<ResultStatus> DeleteTodoItem(long id)
         {
-            var todoItem = await context.TodoItems.FindAsync(id);
+            var todoItem = await _context.TodoItems.FindAsync(id);
 
             if (todoItem == null)
             {
                 return ResultStatus.NotFound;
             }
 
-            context.TodoItems.Remove(todoItem);
-            await context.SaveChangesAsync();
+            _context.TodoItems.Remove(todoItem);
+            await _context.SaveChangesAsync();
 
             return ResultStatus.NoContent;
         }
 
-        private bool TodoItemExists(long id, TodoContext context) =>
-             context.TodoItems.Any(e => e.Id == id);
+        private bool TodoItemExists(long id) =>
+             _context.TodoItems.Any(e => e.Id == id);
 
         private static TodoItemDTO ItemToDTO(TodoItem todoItem) =>
             new TodoItemDTO

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using TodoService.Business.Models;
 using TodoService.Business.Repositories;
-using TodoService.DataAccess.Context;
 
 namespace TodoService.Business.Controllers
 {
@@ -12,18 +11,16 @@ namespace TodoService.Business.Controllers
     public class TodoItemsController : ControllerBase
     {
         private readonly TodoItemsRepository _repository;
-        private readonly TodoContext _context;
 
-        public TodoItemsController(TodoItemsRepository repository, TodoContext context)
+        public TodoItemsController(TodoItemsRepository repository)
         {
             _repository = repository;
-            _context = context;
         }
 
         [HttpGet]
         public async Task<ActionResult<IEnumerable<TodoItemDTO>>> GetTodoItems()
         {
-            var result = await _repository.GetTodoItems(_context);
+            var result = await _repository.GetTodoItems();
 
             return Ok(result);
         }
@@ -31,7 +28,7 @@ namespace TodoService.Business.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<TodoItemDTO>> GetTodoItem(long id)
         {
-            var todoItem = await _repository.GetTodoItem(id, _context);
+            var todoItem = await _repository.GetTodoItem(id);
 
             if (todoItem == null)
             {
@@ -49,7 +46,7 @@ namespace TodoService.Business.Controllers
                 return BadRequest();
             }
 
-            var resultStatus = await _repository.UpdateTodoItem(id, todoItemDTO, _context);
+            var resultStatus = await _repository.UpdateTodoItem(id, todoItemDTO);
 
             switch (resultStatus)
             {
@@ -65,13 +62,13 @@ namespace TodoService.Business.Controllers
         [HttpPost]
         public async Task<ActionResult<TodoItemDTO>> CreateTodoItem(TodoItemDTO todoItemDTO)
         {
-            return await _repository.CreateTodoItem(todoItemDTO, _context);
+            return await _repository.CreateTodoItem(todoItemDTO);
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteTodoItem(long id)
         {
-            var resultStatus = await _repository.DeleteTodoItem(id, _context);
+            var resultStatus = await _repository.DeleteTodoItem(id);
 
             switch (resultStatus)
             {
