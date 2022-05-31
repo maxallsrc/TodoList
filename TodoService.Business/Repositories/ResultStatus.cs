@@ -3,7 +3,7 @@
 namespace TodoService.Business.Repositories
 {
     [Flags]
-    public enum ResultStatus
+    public enum ResultStatus : short
     {
         OK,
         NotFound,
