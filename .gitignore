@@ -7,3 +7,6 @@
 /TodoService.DataAccess/bin
 /TodoService.DataAccess/obj
 /.vs/TodoApiDTO/DesignTimeBuild
+/TodoService.Tests/TodoService.Business.Tests/obj
+/TodoService.Tests/TodoService.Business.Tests/bin
+/TodoService.Tests/.vs/TodoService.Tests/v16/TestStore
