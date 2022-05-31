@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace TodoApi.Models
+namespace TodoService.DataAccess.Models
 {
     #region snippet
     public class TodoItem
