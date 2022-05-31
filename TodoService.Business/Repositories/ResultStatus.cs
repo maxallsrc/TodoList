@@ -1,5 +1,8 @@
-﻿namespace TodoService.Business.Repositories
+﻿using System;
+
+namespace TodoService.Business.Repositories
 {
+    [Flags]
     public enum ResultStatus
     {
         OK,
