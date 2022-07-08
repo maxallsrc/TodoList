@@ -32,7 +32,7 @@ namespace TodoService.Business
 
                     opt.UseSqlServer(Configuration.GetConnectionString("TodoServiceConnectionString"));
                 });
-            services.AddScoped<TodoItemsRepository>();
+            services.AddScoped<ITodoItemsRepository, TodoItemsRepository>();
             services.AddControllers();
             services.AddMvc();
             services.AddSwaggerDocument();

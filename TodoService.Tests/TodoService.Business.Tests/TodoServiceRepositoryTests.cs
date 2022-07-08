@@ -10,7 +10,7 @@ namespace TodoService.Business.Tests
 {
     public class TodoServiceRepositoryTests : IDisposable
     {
-        private TodoItemsRepository repository;
+        private ITodoItemsRepository repository;
         private TodoContext context;
 
         private TodoItemDTO fakeItem;

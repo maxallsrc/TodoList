@@ -8,7 +8,7 @@ using TodoService.DataAccess.Models;
 
 namespace TodoService.Business.Repositories
 {
-    public class TodoItemsRepository
+    public class TodoItemsRepository : ITodoItemsRepository
     {
         private TodoContext _context;
 

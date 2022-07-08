@@ -10,9 +10,9 @@ namespace TodoService.Business.Controllers
     [ApiController]
     public class TodoItemsController : ControllerBase
     {
-        private readonly TodoItemsRepository _repository;
+        private readonly ITodoItemsRepository _repository;
 
-        public TodoItemsController(TodoItemsRepository repository)
+        public TodoItemsController(ITodoItemsRepository repository)
         {
             _repository = repository;
         }
